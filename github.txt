@@ -6,4 +6,4 @@ git branch -M main
 git remote add origin https://github.com/giljrsantos/app-rh.git
 git push -u origin master
 
-https://www.youtube.com/watch?v=C7wRyvZKNWc&list=PLvtOeOw_Op8k8p6vw-ADaHcKavUnZaGk8&index=5
+https://www.youtube.com/watch?v=hPcZpZ_Ksf4&list=PLvtOeOw_Op8k8p6vw-ADaHcKavUnZaGk8&index=7
