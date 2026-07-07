@@ -19,6 +19,7 @@ target/
 *.iml
 *.ipr
 mvnw.cmd
+github.txt
 
 ### NetBeans ###
 /nbproject/private/
