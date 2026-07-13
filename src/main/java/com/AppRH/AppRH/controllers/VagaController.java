@@ -1,12 +1,15 @@
 package com.AppRH.AppRH.controllers;
 
+import com.AppRH.AppRH.models.Candidatos;
 import com.AppRH.AppRH.models.Vaga;
 import com.AppRH.AppRH.repository.CandidatoRepository;
 import com.AppRH.AppRH.repository.VagaRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -23,6 +26,7 @@ public class VagaController {
         return "vaga/formVaga";
     }
 
+    // SALVAR VAGA
     @RequestMapping(value = "/cadastrarVaga", method = RequestMethod.POST)
     public String form(@Valid Vaga vaga, BindingResult result, RedirectAttributes attributes){
 
@@ -33,5 +37,27 @@ public class VagaController {
         vr.save(vaga);
         attributes.addFlashAttribute("mensagem", "Vaga cadastrado com sucesso!");
         return "redirect:/cadastrarVaga";
+    }
+
+    // LISTAR VAGAS
+    @RequestMapping("/vagas")
+    public ModelAndView listarVagas(){
+        ModelAndView mv = new ModelAndView("vaga/listaVagas");;
+        Iterable<Vaga>vagas = vr.findAll();
+        mv.addObject("vagas", vagas);
+        return mv;
+    }
+
+    // LISTA CANDIDATOS DE UMA VAGA
+    @RequestMapping(value = "/{codigo}", method = RequestMethod.GET)
+    public ModelAndView detalhesVaga(@PathVariable("codigo") Long codigo){
+
+        Vaga vaga = vr.findByCodigo(codigo);
+        ModelAndView mv = new ModelAndView("vaga/detalhesVaga");
+        mv.addObject("vaga", vaga);
+        Iterable<Candidatos> candidatos = cr.findByVaga(vaga);
+        mv.addObject("candidatos", candidatos);
+        return mv;
+
     }
 }
