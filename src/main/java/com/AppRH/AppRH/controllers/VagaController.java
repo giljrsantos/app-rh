@@ -60,4 +60,31 @@ public class VagaController {
         return mv;
 
     }
+
+    // DELETA VAGA
+    @RequestMapping(value = "/deletarVaga/{codigo}", method = RequestMethod.DELETE)
+    public String deleteVaga(@PathVariable("codigo") Long codigo){
+
+        Vaga vaga = vr.findByCodigo(codigo);
+        vr.delete(vaga);
+        return "redirect:/vagas";
+    }
+
+    public String detalheVagaPost(@PathVariable("codigo") Long codigo, @Valid Candidatos candidatos, BindingResult result, RedirectAttributes attributes){
+        if(result.hasErrors()){
+            attributes.addFlashAttribute("mensagem", "Verifica os campos...");
+            return "redirect:/{codigo}";
+        }
+
+        // TESTE CONSISTENCIA -> rg duplicado
+        if(cr.findByRg(candidatos.getRg()) != null){
+            attributes.addFlashAttribute("mensagem", "Rg Duplicado...");
+            return "redirect:/{codigo}";
+        }
+        Vaga vaga = vr.findByCodigo(codigo);
+        candidatos.setVaga(vaga);
+        cr.save(candidatos);
+        attributes.addFlashAttribute("mensagem", "Candidato cadastrado com sucesso...");
+        return "redirect:/{codigo}";
+    }
 }
