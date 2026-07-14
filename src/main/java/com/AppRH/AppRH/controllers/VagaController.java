@@ -87,4 +87,42 @@ public class VagaController {
         attributes.addFlashAttribute("mensagem", "Candidato cadastrado com sucesso...");
         return "redirect:/{codigo}";
     }
+
+
+    // DELETE CANDIDATO pelo RG
+    @RequestMapping(value = "/deletarCandidato")
+    public String deletarCandidato(String rg){
+        Candidatos candidatoRg = cr.findByRg(rg);
+        Vaga vaga = candidatoRg.getVaga();
+        String codigo = "" + vaga.getCodigo();
+        cr.delete(candidatoRg);
+        return "redirect:/"+codigo;
+    }
+
+    // Metodo que atualiza a vaga
+    // formulário edição de vaga
+    @RequestMapping(value = "/editar-vaga", method = RequestMethod.GET)
+    public ModelAndView editarVaga(Long codigo){
+        Vaga vaga = vr.findByCodigo(codigo);
+        ModelAndView mv = new ModelAndView("vaga/upate-vaga");
+        mv.addObject("vaga", vaga);
+        return mv;
+    }
+
+    // UPDATE VAGA
+    @RequestMapping(value = "/editar-vaga", method = RequestMethod.POST)
+    public String updateVaga(@Valid Vaga vaga, BindingResult result, RedirectAttributes attributes){
+
+        Long codigoLong = vaga.getCodigo();
+        String codigo= "" + codigoLong;
+
+        if(result.hasErrors()){
+            attributes.addFlashAttribute("mensagem", "Verifica os campos...");
+            return "redirect:/" + codigo;
+        }
+        vr.save(vaga);
+        attributes.addFlashAttribute("success", "Vaga atualizada com sucesso!");
+
+        return "redirect:/" + codigo;
+    }
 }
